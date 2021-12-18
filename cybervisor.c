@@ -26,6 +26,13 @@ int vmxSupport(void) {
 
 }
 
+int getVMXOperation(void) {
+	unsigned long cr4;
+	__asm__ __volatile__("mov %%cr4, %0", "=r" (cr4) : : "memory");
+	cr4 |= CR4_VMXE;
+	__asm__ __volatile__("mov %0, %%cr4", : : "r" (cr4) : "memory");
+}
+
 int __init visor_start(void) {
 	if (!vmxSupport()) {
         printk(KERN_INFO "VMX support wasn't detected, Exiting\n");
